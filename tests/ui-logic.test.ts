@@ -183,6 +183,29 @@ describe('Controller quick actions', () => {
   });
 });
 
+describe('translation-only mode', () => {
+  it('a refinement that keeps the original text shows the original again instead of hiding both', async () => {
+    (window as any).IntersectionObserver = AlwaysVisibleIO;
+    html('<p id="n">Python Software Foundation update for the community.</p>');
+    const t = new FakeTransport();
+    const c = new Controller(t, { mode: 'replace', transStyle: 'faded', preprocess: 'off' });
+    c.start();
+    await tick();
+    const p = document.getElementById('n')!;
+    expect(p.querySelector('xt-orig')).not.toBeNull();
+    const seg = (t.sent.find((m) => m.type === 'translate') as Extract<ToBackground, { type: 'translate' }>).segments[0]!;
+    t.onMessage!({ type: 'refined', id: seg.id, text: seg.text });
+    // The copy is hidden by CSS (data-same); the original must not stay wrapped in the hidden <xt-orig>.
+    expect(p.querySelector('xt-orig')).toBeNull();
+    expect(p.querySelector('xt-trans')!.hasAttribute('data-same')).toBe(true);
+    expect(p.firstChild!.textContent).toBe(seg.text);
+    // A later translation that differs wraps the original again.
+    t.onMessage!({ type: 'refined', id: seg.id, text: '蟒蛇软件基金会社区动态。' });
+    expect(p.querySelector('xt-orig')).not.toBeNull();
+    c.stop();
+  });
+});
+
 describe('layout guard', () => {
   it('turns carousel paragraphs into tooltips but keeps short labels inline', async () => {
     (window as any).IntersectionObserver = AlwaysVisibleIO;

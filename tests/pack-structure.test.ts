@@ -104,3 +104,30 @@ suite('structure: sidebar and shells', () => {
     expect(describe(byText('Members')).section).toBe('Administration');
   });
 });
+
+suite('structure: page sections kept in the DOM', () => {
+  it('puts a heading in its own section', () => {
+    document.body.innerHTML = `<main>
+      <section hidden><h2>Profile</h2><div><b>Display name</b></div></section>
+      <section><div class="head"><h2>Notifications</h2></div><div class="row"><b id="r">Email digests</b></div></section>
+    </main>`;
+    expect(describe(byText('Notifications')).section).toBe('Notifications');
+    expect(describe($('#r')).section).toBe('Notifications');
+  });
+
+  it.each([
+    ['hidden', '<section hidden><h2>Profile</h2></section>'],
+    ['inert', '<section inert><h2>Profile</h2></section>'],
+    ['aria-hidden', '<section aria-hidden="true"><h2>Profile</h2></section>'],
+    ['display: none', '<section style="display: none"><h2>Profile</h2></section>'],
+    ['a hidden part of a shown sibling', '<section><div hidden><h2>Profile</h2></div></section>'],
+  ])('skips the heading of a sibling hidden by %s', (_kind, closed) => {
+    document.body.innerHTML = `<main><h2>Notifications</h2>${closed}<div class="row"><b id="r">Email digests</b></div></main>`;
+    expect(describe($('#r')).section).toBe('Notifications');
+  });
+
+  it('takes the shown heading of a sibling that also holds a hidden one', () => {
+    document.body.innerHTML = `<main><section><div hidden><h2>Profile</h2></div><h2>Notifications</h2></section><div class="row"><b id="r">Email digests</b></div></main>`;
+    expect(describe($('#r')).section).toBe('Notifications');
+  });
+});

@@ -89,6 +89,57 @@ describe('picker input isolation', () => {
   });
 });
 
+describe('picker panel keeps out of the way', () => {
+  // happy-dom has no layout: a wide row reaches under the panel at the top right.
+  const layout = () => vi.spyOn(Element.prototype, 'getBoundingClientRect').mockImplementation(function (this: Element) {
+    if (this.classList.contains('panel')) return new DOMRect(window.innerWidth - 376, 16, 360, 400);
+    if (this.id === 'row') return new DOMRect(0, 100, window.innerWidth, 40);
+    return new DOMRect(0, 0, 0, 0);
+  });
+  const setup = () => {
+    vi.useFakeTimers();
+    layout();
+    document.body.innerHTML = '<div id="row">A settings row as wide as the page</div>';
+    const { root } = openPicker();
+    // The panel is re-rendered on mode changes: always read the current one.
+    const corner = () => root.querySelector('.panel')!.className;
+    const row = document.getElementById('row')!;
+    const hover = (el: Element) => el.dispatchEvent(new MouseEvent('mousemove', { bubbles: true, composed: true, clientX: 200, clientY: 120 }));
+    return { root, corner, row, hover };
+  };
+  afterEach(() => vi.useRealTimers());
+
+  it('moves off a highlight only once the pointer rests there', () => {
+    const { corner, row, hover } = setup();
+    hover(row);
+    vi.advanceTimersByTime(250);
+    expect(corner()).toContain('at-tr');
+    vi.advanceTimersByTime(100);
+    expect(corner()).not.toContain('at-tr');
+  });
+
+  it('stays when picking is paused before the delay ends', () => {
+    const { corner, row, hover } = setup();
+    hover(row);
+    key(row, 'keydown', 'Escape');
+    vi.advanceTimersByTime(500);
+    expect(corner()).toContain('at-tr');
+  });
+
+  it('stays while the pointer is on the panel, even when a scroll repaints the highlight', () => {
+    const { root, corner, row, hover } = setup();
+    hover(row);
+    hover(root.querySelector('.panel button')!);
+    window.dispatchEvent(new Event('scroll'));
+    vi.advanceTimersByTime(500);
+    expect(corner()).toContain('at-tr');
+    // Back on the page and resting: now it moves.
+    hover(row);
+    vi.advanceTimersByTime(350);
+    expect(corner()).not.toContain('at-tr');
+  });
+});
+
 describe('scan overlay input isolation', () => {
   it('preserves focused page menus when the overlay opens', () => {
     document.body.innerHTML = '<div id="menu" role="menu"><input id="menu-search"></div>';

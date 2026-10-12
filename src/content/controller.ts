@@ -652,6 +652,11 @@ export class Controller {
     // Names, brands and "Python" come back unchanged: showing them twice is noise.
     const same = normalizeSpace(stripMarkup(translation)) === normalizeSpace(stripMarkup(seg.text));
     seg.el.toggleAttribute('data-same', same);
+    // An unchanged name shows as its original: unwrap it if replace mode hid it for an earlier translation.
+    if (same && seg.wrap) {
+      unwrapOriginal(seg.wrap);
+      seg.wrap = null;
+    }
     const { fragment } = buildFragment(translation, seg.slots, this.doc, seg.outer, seg);
     setContent(seg.el, fragment, refined);
     if (this.firstPaintMs === null && !same) this.firstPaintMs = Math.round(performance.now() - this.startedAt);

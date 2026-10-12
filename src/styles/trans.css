@@ -152,6 +152,11 @@ html.xt-replace xt-trans[data-tip] {
   display: inline !important;
 }
 
+/* Unchanged names keep their original (never wrapped), so the copy stays hidden here too. */
+html.xt-replace xt-trans[data-same] {
+  display: none !important;
+}
+
 /* ---------- states ---------- */
 
 xt-spin {
