@@ -15,6 +15,7 @@ LEDGER.md
 .claude/
 .codex-runs/
 # Playwright
+docs/media/.out/
 e2e/.results
 playwright-report
 test-results
