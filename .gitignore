@@ -1,0 +1,22 @@
+node_modules
+dist
+.wxt
+harness/dist
+*.log
+harness/fixtures/*.html
+.output
+.DS_Store
+*.zip
+.env*
+# Private working notes and local tool state: never published
+Ledger.md
+LEDGER.md
+.ledger/
+.claude/
+.codex-runs/
+# Playwright
+e2e/.results
+playwright-report
+test-results
+# Structure skeletons of real sites (debug research): sanitized, still never committed
+research/

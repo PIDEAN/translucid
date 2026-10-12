@@ -1,0 +1,44 @@
+{
+  "name": "translucid",
+  "private": true,
+  "version": "0.3.0",
+  "description": "LLM web page translation to Chinese, plus local per-site UI language packs in any language (Chrome/Edge MV3).",
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "dev": "wxt",
+    "dev:edge": "wxt -b edge",
+    "build": "wxt build",
+    "zip": "wxt zip",
+    "compile": "tsc --noEmit",
+    "test": "vitest run",
+    "postinstall": "wxt prepare",
+    "harness": "vite --config harness/vite.config.ts",
+    "try": "tsx scripts/try.ts",
+    "build:debug": "wxt build --mode debug",
+    "icons": "tsx scripts/icons.ts",
+    "e2e": "wxt build && playwright test"
+  },
+  "devDependencies": {
+    "@base-ui/react": "1.8.0",
+    "@playwright/test": "^1.64.0",
+    "@radix-ui/react-dialog": "1.1.23",
+    "@radix-ui/react-dropdown-menu": "2.1.24",
+    "@resvg/resvg-js": "^2.6.2",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "happy-dom": "^20.14.5",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0",
+    "rollup-plugin-license": "^3.7.1",
+    "tsx": "^4.23.15",
+    "typescript": "^7.0.2",
+    "vite": "8.3.2",
+    "vitest": "^5.0.3",
+    "wxt": "^0.21.4"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.133.0",
+    "@mozilla/readability": "^0.6.0"
+  }
+}

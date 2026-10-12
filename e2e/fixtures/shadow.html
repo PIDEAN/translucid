@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><link rel="icon" href="data:,"><title>Shadow fixture</title></head>
+<body>
+  <app-toolbar id="toolbar"></app-toolbar>
+  <script>
+    customElements.define('app-toolbar', class extends HTMLElement {
+      constructor() {
+        super();
+        this.attachShadow({ mode: 'open' }).innerHTML = '<button id="new">New chat</button><input id="search" placeholder="Search chats">';
+      }
+    });
+    setTimeout(() => {
+      const b = document.createElement('button');
+      b.id = 'late';
+      b.textContent = 'Settings';
+      document.getElementById('toolbar').shadowRoot.appendChild(b);
+    }, 1500);
+  </script>
+</body>
+</html>

@@ -1,0 +1,10 @@
+{
+  "extends": "./.wxt/tsconfig.json",
+  "compilerOptions": {
+    "strict": true,
+    "noUnusedLocals": true,
+    "types": ["vitest/globals"],
+    "jsx": "react-jsx"
+  },
+  "exclude": ["node_modules", "dist", "harness/dist"]
+}

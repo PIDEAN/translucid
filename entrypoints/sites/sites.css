@@ -1,0 +1,275 @@
+/* Workbench (site localization): builds on ui.css, the shared shell (app.css) and the op-* blocks. */
+
+.st-enabled {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Tabs of one site, between the page header and its card. */
+.st-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: -8px;
+  min-width: 0;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--line);
+}
+
+.st-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: var(--h-sm);
+  padding: 0 12px;
+  border-radius: var(--r-sm);
+  color: var(--text-2);
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.st-tab:hover {
+  background: var(--hover);
+  color: var(--text);
+}
+
+.st-tab[aria-current='page'] {
+  background: var(--accent-soft);
+  color: var(--accent-strong);
+  font-weight: 600;
+}
+
+.st-count {
+  min-width: 20px;
+  height: 18px;
+  padding: 0 6px;
+  border-radius: 999px;
+  background: var(--hover);
+  color: var(--text-2);
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 18px;
+  text-align: center;
+}
+
+.st-count-amber {
+  background: var(--amber-soft);
+  color: var(--amber-ink);
+}
+
+.st-meta {
+  margin-left: 8px;
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--muted);
+}
+
+.st-site-link {
+  font-family: var(--mono);
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.st-steps {
+  margin: 0;
+  padding-left: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  color: var(--text-2);
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+/* A generation in progress. */
+.st-banner {
+  align-items: stretch;
+}
+
+.st-banner-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+
+.st-bar {
+  height: 6px;
+  border-radius: 3px;
+  background: var(--accent-soft);
+  overflow: hidden;
+}
+
+.st-bar > span {
+  display: block;
+  height: 100%;
+  border-radius: 3px;
+  background: var(--accent);
+  transition: width 0.3s;
+}
+
+/* ---------- review ---------- */
+
+.st-review {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.st-review-head {
+  gap: 14px;
+}
+
+.st-screen {
+  padding: 18px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.st-screen > h3 {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.st-section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-left: 12px;
+  border-left: 2px solid var(--line);
+}
+
+.st-section > h4 {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-2);
+}
+
+.st-group {
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  padding: 8px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.st-group-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 32px;
+  padding: 0 6px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.st-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 32px;
+  padding: 4px 6px;
+  border-radius: 6px;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.st-item:hover {
+  background: var(--hover);
+}
+
+.st-item.uncertain {
+  background: var(--warn-soft);
+}
+
+.st-item input,
+.st-group-head input {
+  margin: 0;
+  flex: none;
+  accent-color: var(--accent);
+}
+
+.st-item .st-src {
+  flex: 1;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.st-filters {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.st-confirm {
+  position: sticky;
+  bottom: 12px;
+  z-index: 3;
+  /* Never taller than the window: an open preview scrolls inside instead of covering the list. */
+  max-height: calc(100vh - 24px);
+  overflow: auto;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  box-shadow: 0 8px 28px rgba(20, 22, 27, 0.12);
+}
+
+.st-confirm-below {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.st-import {
+  display: contents;
+}
+
+.st-confirm-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 10px;
+}
+
+.st-actions {
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.st-list {
+  margin: 0;
+  padding-left: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: 13px;
+}
+
+label.btn {
+  cursor: pointer;
+}
+
+.st-where {
+  min-width: 140px;
+}
+
+.st-where .tag {
+  margin-left: 6px;
+}
+
+.op-pack-settings > .op-switch-row:first-child {
+  padding-top: 0;
+}
+
+.st-settings-actions {
+  padding-top: 16px;
+  border-top: 1px solid var(--line);
+}

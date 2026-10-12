@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <title>Content Harness</title>
+    <style>
+      body { margin: 0; font: 13px -apple-system, sans-serif; display: flex; flex-direction: column; height: 100vh; }
+      #bar { display: flex; gap: 8px; align-items: center; padding: 8px 12px; border-bottom: 1px solid #ddd; background: #fafafa; flex-wrap: wrap; }
+      #stats { color: #666; margin-left: auto; }
+      iframe { flex: 1; border: 0; width: 100%; }
+    </style>
+  </head>
+  <body>
+    <div id="bar">
+      <select id="page">
+        <option value="sample">sample</option>
+        <option value="wiki">wikipedia</option>
+        <option value="hn">hacker news</option>
+        <option value="github">github</option>
+      </select>
+      <button id="toggle">翻译 / 恢复</button>
+      <button id="mode">切换模式</button>
+      <select id="style"><option>faded</option><option>border</option><option>dashed</option><option>plain</option></select>
+      <label><input type="checkbox" id="flaky" /> 模拟失败</label>
+      <button id="mutate">注入动态内容</button>
+      <span id="stats"></span>
+    </div>
+    <iframe id="frame"></iframe>
+    <script type="module" src="./main.ts"></script>
+  </body>
+</html>

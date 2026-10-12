@@ -1,0 +1,187 @@
+/* ---------- base: inherit the page's type, add Chinese rhythm ---------- */
+
+xt-trans {
+  font: inherit;
+  color: inherit;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  text-spacing-trim: trim-start;
+  line-break: strict;
+  word-break: auto-phrase;
+}
+
+xt-trans.xt-block {
+  display: block;
+  margin: 0.3em 0 0.1em;
+  letter-spacing: 0.02em;
+}
+
+/* Body text: Han glyphs have no ascenders/descenders and look cramped at Latin line heights. */
+html.xt-lh-comfortable xt-trans.xt-block:not(.xt-heading) {
+  line-height: 1.75;
+}
+
+html.xt-lh-compact xt-trans.xt-block:not(.xt-heading) {
+  line-height: 1.6;
+}
+
+xt-trans.xt-heading {
+  letter-spacing: normal;
+}
+
+xt-trans.xt-cell {
+  margin: 0.15em 0 0;
+}
+
+xt-trans.xt-inline {
+  display: inline;
+}
+
+xt-trans.xt-inline::before {
+  content: ' ';
+  white-space: pre;
+}
+
+/* Tight containers (nav rows, clamped card titles): one line, never taller. */
+xt-trans.xt-fit {
+  display: inline-block;
+  max-width: 100%;
+  margin: 0 0 0 0.4em;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  vertical-align: bottom;
+  letter-spacing: normal;
+}
+
+xt-trans.xt-fit::before {
+  content: none;
+}
+
+/* Layout guard fallback: translation lives in the parent's title tooltip. */
+xt-trans[data-tip] {
+  display: none !important;
+}
+
+html.xt-fs-small xt-trans {
+  font-size: 0.94em;
+}
+
+xt-orig {
+  display: contents;
+}
+
+xt-peel {
+  display: none;
+}
+
+xt-trans[data-same] {
+  display: none !important;
+}
+
+/* ---------- bilingual styles ---------- */
+
+html.xt-style-faded xt-trans[data-state='done'],
+html.xt-style-border xt-trans.xt-inline[data-state='done'] {
+  opacity: 0.78;
+}
+
+html.xt-style-border xt-trans.xt-block[data-state='done'] {
+  border-left: 2px solid rgba(47, 86, 214, 0.45);
+  padding-left: 0.6em;
+}
+
+html.xt-style-dashed xt-trans[data-state='done'] {
+  text-decoration: underline dashed rgba(127, 127, 127, 0.6);
+  text-underline-offset: 0.3em;
+}
+
+html.xt-style-tint xt-trans[data-state='done'] {
+  background: rgba(47, 86, 214, 0.07);
+  border-radius: 4px;
+}
+
+html.xt-style-tint xt-trans.xt-block[data-state='done'] {
+  padding: 0.2em 0.5em;
+}
+
+html.xt-dark-page.xt-style-tint xt-trans[data-state='done'] {
+  background: rgba(140, 160, 255, 0.16);
+}
+
+html.xt-dark-page.xt-style-border xt-trans.xt-block[data-state='done'] {
+  border-left-color: rgba(140, 160, 255, 0.55);
+}
+
+xt-trans[data-refined] {
+  text-decoration: underline dotted rgba(46, 160, 67, 0.7) !important;
+  text-underline-offset: 0.3em;
+}
+
+/* ---------- replace mode: hide originals, render translation in place ---------- */
+
+html.xt-replace xt-orig {
+  display: none !important;
+}
+
+html.xt-replace xt-trans {
+  display: inline !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  opacity: 1 !important;
+  background: none !important;
+  text-decoration: none;
+  letter-spacing: normal;
+}
+
+html.xt-replace xt-trans.xt-fit {
+  display: inline-block !important;
+}
+
+html.xt-replace xt-trans.xt-inline::before {
+  content: none;
+}
+
+html.xt-replace xt-peel {
+  display: inline;
+}
+
+/* Tooltip fallbacks still replace the original in translation-only mode. */
+html.xt-replace xt-trans[data-tip] {
+  display: inline !important;
+}
+
+/* ---------- states ---------- */
+
+xt-spin {
+  display: inline-block;
+  width: 0.8em;
+  height: 0.8em;
+  border: 2px solid rgba(127, 127, 127, 0.3);
+  border-top-color: rgba(127, 127, 127, 0.9);
+  border-radius: 50%;
+  animation: xt-spin 0.8s linear infinite;
+  vertical-align: middle;
+}
+
+xt-trans[data-state='refining'] {
+  opacity: 0.5;
+}
+
+@keyframes xt-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+xt-retry {
+  cursor: pointer;
+  font-size: 0.85em;
+  color: #d93025;
+  user-select: none;
+}
+
+xt-retry:hover {
+  text-decoration: underline;
+}

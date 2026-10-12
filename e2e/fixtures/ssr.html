@@ -1,0 +1,9 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><link rel="icon" href="data:,"><title>SSR fixture</title></head>
+<body>
+  <!-- Server-rendered markup identical to the client render; hydration starts late. -->
+  <div id="root" data-server-rendered="true"><main><button id="new">New chat</button><button id="inc">Settings</button><span id="count">0</span></main></div>
+  <script type="module" src="./ssr.tsx"></script>
+</body>
+</html>
