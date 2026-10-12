@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Docs shell</title>
+<style>body{margin:0;font:15px/1.5 system-ui,sans-serif}header{padding:8px 16px}iframe{border:0;display:block}</style>
+</head>
+<body>
+<!-- A docs site that renders its whole body in a cross-origin iframe filling the window
+     (127.0.0.1 is another origin than localhost), plus an ad-sized frame below it. -->
+<header>Cookies help us deliver our services.</header>
+<iframe id="article" title="Article" style="width:100%;height:100vh"></iframe>
+<iframe id="ad" title="Advertisement" src="http://127.0.0.1:5300/frame-ad.html" style="width:300px;height:250px"></iframe>
+<script>
+  // ?frame=frame-login.html swaps the page frame (the sign-in case).
+  const name = new URLSearchParams(location.search).get('frame') || 'frame-article.html';
+  document.getElementById('article').src = 'http://127.0.0.1:5300/' + name;
+</script>
+</body>
+</html>

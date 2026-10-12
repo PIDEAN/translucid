@@ -236,6 +236,22 @@ body {
   color: var(--danger);
 }
 
+.pp-rest {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 8px 10px;
+  border-radius: var(--r-sm);
+  background: var(--amber-soft);
+  color: var(--amber-ink);
+  font-size: 13px;
+}
+
+.pp-rest[hidden] {
+  display: none;
+}
+
 .pp-sec {
   display: flex;
   flex-direction: column;

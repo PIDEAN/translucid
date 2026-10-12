@@ -3,6 +3,7 @@ import { estimateCost, formatCostLines, monthKey } from '../../src/shared/cost';
 import { isDeepSeekPeak, providerReady, resolvedPrice } from '../../src/shared/pricing';
 import { explainExpert, findSiteRule } from '../../src/shared/match';
 import type { RuntimeRequest, TabCommand, TabState } from '../../src/shared/messages';
+import { sendToTab, tabState } from '../../src/shared/tab-state';
 import { loadSettings, onSettingsChanged, saveSettings } from '../../src/shared/settings';
 import type { DisplayMode, Settings, SiteMode, TransStyle, UsageStats } from '../../src/shared/types';
 import { h, select, toast } from '../../src/ui/dom';
@@ -30,10 +31,12 @@ let tabUrl = '';
 let host = '';
 let update: (st: TabState) => void = () => {};
 
+/** Run a command in every translating document of the tab, then read the tab as one page. */
 async function send(cmd: TabCommand): Promise<TabState | null> {
   if (tabId === undefined) return null;
   try {
-    return (await browser.tabs.sendMessage(tabId, cmd)) as TabState;
+    if (cmd.type !== 'get-state') await sendToTab(tabId, cmd);
+    return await tabState(tabId);
   } catch {
     return null; // chrome:// pages, the Web Store, PDFs, or a tab opened before install
   }
@@ -486,6 +489,14 @@ async function renderActive(st: TabState, ctx: RenderContext) {
   const statusText = h('span', { class: 'pp-status' });
   const perf = h('span', {});
   const fails = h('span', { class: 'pp-fail' });
+  // Text the page translation has not reached yet: a page frame left out by auto-translate.
+  const restText = h('span', {});
+  const rest = h(
+    'div',
+    { class: 'pp-rest', hidden: true },
+    restText,
+    h('button', { type: 'button', class: 'btn btn-sm', onclick: () => void act({ type: 'set-enabled', enabled: true }) }, '翻译内嵌页面'),
+  );
 
   const mode = modeSeg(st.mode, async (m) => {
     mode.set(m);
@@ -562,6 +573,7 @@ async function renderActive(st: TabState, ctx: RenderContext) {
         h('div', { class: 'pp-progress-head' }, statusText, progressText),
         h('div', { class: 'pp-bar', role: 'progressbar', 'aria-label': '翻译进度' }, bar),
         h('div', { class: 'pp-perf hint' }, perf, fails),
+        rest,
         toggle,
       ),
       section('显示方式', mode.el, h('span', { class: 'hint pp-inline' }, '切换不会重新请求', shortcut('toggle-mode'))),
@@ -584,10 +596,12 @@ async function renderActive(st: TabState, ctx: RenderContext) {
     bar.style.width = `${pct}%`;
     bar.parentElement!.setAttribute('aria-valuenow', String(pct));
     progressText.textContent = `${done} / ${segments} 段`;
-    statusText.textContent = pending ? '正在翻译可见区域' : done ? '可见区域已翻译' : '等待页面滚动';
+    statusText.textContent = pending ? '正在翻译可见区域' : done ? '可见区域已翻译' : segments ? '等待页面滚动' : s.rest ? '内嵌页面尚未翻译' : '这个页面没有找到可翻译的文字';
     statusText.dataset.busy = String(pending > 0);
     perf.textContent = `首屏 ${ms(s.firstPaintMs)} · 平均首字 ${ms(s.avgTtftMs)}`;
     fails.textContent = errors ? `${errors} 段失败` : '';
+    rest.hidden = !s.rest;
+    restText.textContent = s.rest ? `内嵌页面里还有约 ${s.rest} 段未翻译` : '';
     retryBtn.setEnabled(errors > 0, errors ? `${errors} 段，逐段重新请求` : '没有失败的段落');
     refineBtn.setEnabled(s.selectionInSegment, s.selectionInSegment ? '两次调用，覆盖缓存' : '先在页面上选中一段文字');
     purgeBtn.setEnabled(done > 0 || errors > 0);

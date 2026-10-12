@@ -12,7 +12,7 @@ export default defineConfig({
   webServer: [
     {
       command: 'pnpm exec vite --config e2e/fixtures/vite.config.ts',
-      url: 'http://localhost:5300/static.html',
+      url: 'http://127.0.0.1:5300/static.html',
       reuseExistingServer: true,
       timeout: 60_000,
     },

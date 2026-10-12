@@ -53,6 +53,11 @@ export interface TabState {
   pageInfo: PageInfo | null;
   /** The current text selection sits in a translated paragraph. */
   selectionInSegment: boolean;
+  /**
+   * While on: translatable segments in documents of the tab that are still off (a page frame the
+   * global auto-translate did not reach). Only set on a combined state (src/shared/frame-state.ts).
+   */
+  rest?: number | null;
 }
 
 /** popup/options -> background via runtime.sendMessage. */
@@ -65,4 +70,26 @@ export type RuntimeRequest =
   /** Debug builds only: reload the unpacked extension from disk. */
   | { type: 'reload-ext' }
   /** Debug builds only: report provider routing (key presence only) and optionally switch it. */
-  | { type: 'debug-provider'; active?: string; short?: string; fallback?: string };
+  | { type: 'debug-provider'; active?: string; short?: string; fallback?: string }
+  /** A page-sized frame joining its page asks what the user chose there so far (answered by the top document). */
+  | { type: 'frame-join' };
+
+/**
+ * What the user chose for the page in the top document's lifetime (popup, shortcuts, context menu).
+ * The top document is the one source of it; frames follow (src/content/page-intent.ts). null: no choice
+ * yet. `doc` names the top document (a new one after each navigation); `version` grows with every page
+ * command, so a frame never applies another page's intent, or an older one over a newer one.
+ */
+export interface PageIntent {
+  doc: string;
+  version: number;
+  enabled: boolean | null;
+  mode: DisplayMode | null;
+  expertId: string | null;
+}
+
+/** background -> top document: the page intent, for a joining frame. */
+export type PageIntentRequest = { type: 'page-intent' };
+
+/** The top document's reply to a command: its state, plus the page intent after the command. */
+export type TopReply = TabState & { intent?: PageIntent };

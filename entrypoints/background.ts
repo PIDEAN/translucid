@@ -28,7 +28,8 @@ import { PACK_SCRIPT_FILE } from '../src/background/pack-registry';
 import { emptyPack, ENTRY_KINDS, entryKey, isValidHost, isValidLang, markStale, normalizeKey, packId, variantKey, type EntryKind } from '../src/pack/format';
 import { batchMessages, cancelJob, createDescribePlan, createPlan, getJob, packProvider, pauseInterruptedJobs, resumeJob, runDescribePlan, startJob } from '../src/background/pack-gen';
 import { formatCost } from '../src/shared/cost';
-import { PORT_NAME, type RuntimeRequest, type TabCommand, type ToBackground } from '../src/shared/messages';
+import { PORT_NAME, type PageIntentRequest, type RuntimeRequest, type TabCommand, type ToBackground } from '../src/shared/messages';
+import { sendToTab } from '../src/shared/tab-state';
 import { DEFAULT_SETTINGS, loadSettings, onSettingsChanged, saveSettings } from '../src/shared/settings';
 import { costOf, isMachineTranslation, resolvedPrice, vendorOf } from '../src/shared/pricing';
 import type { ProviderConfig, Settings } from '../src/shared/types';
@@ -97,13 +98,20 @@ export default defineBackground(() => {
       case 'debug-provider':
         if (import.meta.env.MODE !== 'debug') return false;
         return reply(debugProvider(req.active, req.short, req.fallback));
+      case 'frame-join': {
+        // Only a subframe joins; the answer comes from the top document of the same tab.
+        const tabId = sender.tab?.id;
+        if (tabId === undefined || !sender.frameId) return reply(Promise.resolve(null));
+        return reply(browser.tabs.sendMessage(tabId, { type: 'page-intent' } satisfies PageIntentRequest, { frameId: 0 }).catch(() => null));
+      }
     }
     return false;
   });
 
+  // Every translating document of the tab gets the command, toggles resolved for the whole tab.
   const sendToActiveTab = async (cmd: TabCommand) => {
     const [tab] = await browser.tabs.query({ active: true, currentWindow: true });
-    if (tab?.id !== undefined) await browser.tabs.sendMessage(tab.id, cmd).catch(() => {});
+    if (tab?.id !== undefined) await sendToTab(tab.id, cmd).catch(() => {});
   };
 
   browser.commands.onCommand.addListener((command) => {
@@ -144,8 +152,9 @@ export default defineBackground(() => {
 
   browser.contextMenus.onClicked.addListener((info, tab) => {
     if (tab?.id === undefined) return;
-    const cmd: TabCommand = info.menuItemId === 'xt-refine' ? { type: 'refine-at-cursor' } : { type: 'toggle' };
-    void browser.tabs.sendMessage(tab.id, cmd).catch(() => {});
+    // 精翻此段 refines the paragraph under the menu, in the document where it was opened.
+    if (info.menuItemId === 'xt-refine') void browser.tabs.sendMessage(tab.id, { type: 'refine-at-cursor' } satisfies TabCommand, { frameId: info.frameId ?? 0 }).catch(() => {});
+    else void sendToTab(tab.id, { type: 'toggle' }).catch(() => {});
   });
 });
 

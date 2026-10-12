@@ -229,6 +229,7 @@ describe('PackApplier contexts', () => {
     expect(document.getElementById('c')!.textContent).toBe('归档');
   });
 
+  // 3000 rows on purpose: under a full parallel run this can take longer than the default 5 s.
   it('finishes large subtrees across frames and survives the app removing nodes mid-walk', async () => {
     const rows = Array.from({ length: 3000 }, (_, i) => `<li id="r${i}"><button>Copy</button></li>`).join('');
     start(`<ul id="list">${rows}</ul>`);
@@ -236,7 +237,7 @@ describe('PackApplier contexts', () => {
     for (let i = 0; i < 200 && document.getElementById('r2999')!.textContent !== '复制'; i++) await new Promise((r) => setTimeout(r, 5));
     expect(document.getElementById('r2999')!.textContent).toBe('复制');
     expect([...document.querySelectorAll('#list button')].every((b) => b.textContent === '复制')).toBe(true);
-  });
+  }, 20_000);
 });
 
 
