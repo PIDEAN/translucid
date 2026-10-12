@@ -5,9 +5,9 @@
 An MV3 browser extension (Chrome / Edge) that builds local **site language packs**, showing a web app's interface in **any** language, and translates web pages into **Simplified Chinese** with an LLM. Bring your own API key; no server, no telemetry. [English summary below.](#english)
 
 <p align="center">
-  <img src="docs/images/hero.gif" width="880" alt="同一个网页应用的界面在英语、简体中文、日语、西班牙语、德语、法语和韩语之间切换">
+  <img src="docs/images/languages.gif" width="880" alt="同一个网页应用的界面在英语、简体中文、日语、西班牙语、德语、法语和韩语之间切换">
 </p>
-<p align="center"><sub>真实的扩展把手写的语言包依次应用到一个虚构的笔记应用上，界面可以换成任意语言。侧栏「最近」里的笔记标题属于用户内容，始终保持原文。</sub></p>
+<p align="center"><sub>真实的扩展把语言包依次应用到一个虚构的笔记应用上，界面可以换成任意语言；侧栏「最近」里的笔记标题属于用户内容，始终保持原文。本页动图都由真实扩展在虚构页面上录制，译文为手写示例（<a href="docs/media">制作方法</a>）。</sub></p>
 
 扩展分三块，从左侧导航或扩展图标进入：
 
@@ -21,18 +21,12 @@ An MV3 browser extension (Chrome / Edge) that builds local **site language packs
 
 ## 站点本地化
 
-为常用的网页应用（例如英文界面的 AI 助手、开发工具）一键生成完整的界面译文。扫描会自动打开菜单、设置分区和下拉列表，找出界面文字。翻译时按「界面 › 分区 › 问题 › 选项」的结构成组发给模型，所以同一个词在不同问题下能有不同的正确译法（例如文字大小里的 Medium 和栏宽里的 Medium）。结果保存在本机，之后打开网站直接显示目标语言界面，不再请求模型。
+为常用的网页应用（例如英文界面的 AI 助手、开发工具）一键生成完整的界面译文。扫描会自动打开菜单、设置分区和下拉列表，找出界面文字。翻译时按「界面 › 分区 › 问题 › 选项」的结构成组发给模型，所以同一个词在不同问题下能有不同的正确译法（例如「文字大小」里的 Medium 和「页面宽度」里的 Medium）。结果保存在本机，之后打开网站直接显示目标语言界面，不再请求模型。
 
-<table>
-  <tr>
-    <td width="300" valign="top"><img src="docs/images/popup.png" width="300" alt="弹出菜单：一键本地化此站点"></td>
-    <td valign="top"><img src="docs/images/workbench-review.png" alt="工作台：按界面结构审核找到的文字，确认一次即翻译"></td>
-  </tr>
-  <tr>
-    <td align="center"><sub>弹出菜单：一键本地化此站点</sub></td>
-    <td align="center"><sub>工作台：按「界面 › 分区 › 问题」审核找到的文字，确认一次即翻译</sub></td>
-  </tr>
-</table>
+<p align="center">
+  <img src="docs/images/scan.gif" width="880" alt="点扩展图标，选择一键本地化此站点；扫描自动打开设置的各个分区和菜单，结束后页面恢复原状">
+</p>
+<p align="center"><sub>一键扫描：自动打开设置分区和菜单收集界面文字，不改任何设置，结束后恢复原状（扫描过程为 2 倍速；省略了第一次扫描前的同意说明）。</sub></p>
 
 1. 打开要本地化的网站。想连设置一起翻译，就先打开它的设置窗口。
 2. 点扩展图标，在「本地化」标签选择目标语言，点「一键本地化此站点」。第一次扫描会先说明扫描会做什么，请你同意。扫描只打开导航和菜单，不改任何设置，结束后恢复原状；按 Esc 可随时停止。
@@ -43,20 +37,31 @@ An MV3 browser extension (Chrome / Edge) that builds local **site language packs
 4. 确认一次，先看到将要发送的完整请求，再点「确认发送并生成」。
 5. 已打开的页面立即显示译文。以后日常使用中出现的新界面文字会记下来等你审核（可关闭）。随时可以「显示原文」、按位置编辑译文、导出或导入语言包。
 
+<p align="center">
+  <img src="docs/images/review.gif" width="880" alt="工作台按问题分组列出界面文字，两个 Medium 分属文字大小和页面宽度；确认后生成，回到网站界面已是中文，两个 Medium 分别译作中和适中">
+</p>
+<p align="center"><sub>审核与生成：选项连同所属问题一起翻译。同一个 Medium，在「文字大小」里是「中」，在「页面宽度」里是「适中」。</sub></p>
+
 **手动调整范围**：需要精确控制时，用「调整范围」圈选要收集或排除的区域。
 
-- 圈选面板会自动让开正在圈选的区域。
+- 指针停在被面板挡住的区域上时，面板会自动让开；移向面板按钮时面板不动。
 - 想圈选网页上展开的菜单，有两种做法：
   - 先打开菜单，再按 `Alt+Shift+P` 开始圈选（点扩展图标会让网页失去焦点、关掉菜单）；
   - 或者圈选中按 `Esc` 暂停，正常点开菜单，再按 `Esc` 继续。
 
-![圈选面板：圈选侧栏、排除最近列表，面板避开正在圈选的区域](docs/images/picker.png)
+<p align="center">
+  <img src="docs/images/picker.gif" width="880" alt="圈选面板：悬停高亮，按上方向键扩大到整个侧栏并圈选；切到排除内容，把最近笔记列表标为排除；要圈的地方被面板挡住时面板让开">
+</p>
 
 能识别的界面结构包括：设置对话框的分区导航、带标签的选项组、「标题 + 说明 | 控件」式的设置行、原生下拉框、弹出菜单和下拉列表（含被渲染到页面别处的弹层）、侧栏导航和标签页。测试页面用真实的 Base UI 与 Radix 组件仿照常见生产力工具的结构。
 
 候选文字只存在本机，30 天过期；导出前自动清洗个人信息，并让你预览。详见 [PRIVACY.md](PRIVACY.md) 和 [docs/DESIGN.md](docs/DESIGN.md)。
 
 ## 沉浸翻译
+
+<p align="center">
+  <img src="docs/images/immersive.gif" width="880" alt="在博客文章上点翻译此页，译文逐段出现在原文下方，再一键切换为只看译文">
+</p>
 
 - **网页翻译**：双语对照或只看译文；优先翻译视口附近的内容，流式逐段显示；保留链接、加粗、代码等行内格式；本地缓存，刷新页面不重复请求。
 - **场景专家**：通用、科技、新闻、学术、严谨（法律 / 医疗 / 金融）、社区、小说七套规则，按域名自动匹配，可编辑、导入导出。
@@ -107,7 +112,7 @@ pnpm e2e            # 端到端测试（Playwright + 本地 fixture 页面 + moc
 pnpm harness        # http://localhost:5200：在本地页面上调试内容脚本（假后端）
 pnpm build:debug    # 调试版：含页面调试接口和每次请求的指标日志
 pnpm icons          # 从 src/ui/brand.ts 重新生成扩展图标
-pnpm readme:media   # 用测试数据重新生成 README 的截图和动图（需要 Pillow 和 ffmpeg，见 docs/media）
+pnpm readme:media   # 用测试数据重新生成 README 的截图和动图（Playwright 录制 + Remotion 合成，需要 ffmpeg，见 docs/media）
 XT_API_KEY=… pnpm try --provider deepseek   # 用真实 API 试跑各场景的提示词
 ```
 
@@ -137,7 +142,7 @@ docs/               设计说明、致谢、截图
 
 ## English
 
-The animation at the top is the real extension applying hand-written language packs to a made-up notes app: the same interface in seven languages, while the user's own note titles stay as written.
+The animations on this page are the real extension recorded on made-up pages, with hand-written translations ([how they are made](docs/media)). The one at the top applies language packs to a made-up notes app: the same interface in seven languages, while the user's own note titles stay as written. The others show the one-click scan, the review with the exact request preview (the same "Medium" becomes 中 for text size and 适中 for page width), region picking, and page translation side by side or in place.
 
 **Translucid** has three parts, reachable from the side navigation or the toolbar popup:
 
@@ -160,7 +165,7 @@ Other notes:
 - **Region picking** gives you fine control.
   - Open a page menu first, then press `Alt+Shift+P`. Clicking the toolbar icon would take focus from the page and close the menu.
   - `Esc` pauses and resumes picking.
-  - The picker panel moves out of the way of what you are picking.
+  - The picker panel moves out of the way when you rest on something it covers, and stays put when you head for its buttons.
 - **Privacy:** text goes only to the providers you configure. Keys stay in local browser storage (unencrypted). There is no telemetry. See [PRIVACY.md](PRIVACY.md).
 - **Unofficial endpoints:** the optional free Google / Microsoft machine translation uses **unofficial** endpoints and is off by default.
 - **Trademarks:** provider logos and names belong to their owners and only identify supported services.

@@ -16,6 +16,7 @@ LEDGER.md
 .codex-runs/
 # Playwright
 docs/media/.out/
+docs/media/remotion/frames/
 e2e/.results
 playwright-report
 test-results

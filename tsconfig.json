@@ -6,5 +6,5 @@
     "types": ["vitest/globals"],
     "jsx": "react-jsx"
   },
-  "exclude": ["node_modules", "dist", "harness/dist"]
+  "exclude": ["node_modules", "dist", "harness/dist", "docs/media/remotion"]
 }

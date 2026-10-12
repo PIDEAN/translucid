@@ -1,8 +1,8 @@
 import { defineConfig } from '@playwright/test';
 import { fileURLToPath } from 'node:url';
 
-// README media from test data only: screenshots in docs/images and the frames of the hero animation.
-// Run `pnpm readme:media` (builds the extension, captures, then assembles docs/images/hero.gif).
+// README media from test data only: the config screenshot in docs/images and the frames + timelines of the
+// animations (docs/media/.out). Run `pnpm readme:media`: build, capture, then render the GIFs with Remotion.
 export default defineConfig({
   testDir: '.',
   testMatch: '*.media.ts',
@@ -12,12 +12,13 @@ export default defineConfig({
   outputDir: '.out/results',
   webServer: [
     {
-      // The e2e fixture server: the extension's content scripts run on localhost pages.
-      command: 'pnpm exec vite --config e2e/fixtures/vite.config.ts',
+      // Answers translation requests with hand-written Chinese (zh-dictionary.json); never a real model.
+      // The pages themselves are served by page.route() at made-up addresses (lib.ts).
+      command: 'node docs/media/mock-translate.mjs',
       cwd: fileURLToPath(new URL('../..', import.meta.url)),
-      url: 'http://localhost:5300/static.html',
+      url: 'http://localhost:5302/control?delay=0',
       reuseExistingServer: true,
-      timeout: 60_000,
+      timeout: 30_000,
     },
   ],
 });

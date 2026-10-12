@@ -3,84 +3,137 @@
 <head>
 <meta charset="utf-8">
 <title>Notara</title>
+<!-- A made-up notes app for the README media. Its settings sections and menu work like a real app's,
+     so the extension's one-click scan can explore it. -->
 <style>
 *{box-sizing:border-box}
-html,body{margin:0}
-body{width:960px;height:620px;background:#eceef2;font:13px/1.45 -apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans","Apple SD Gothic Neo",sans-serif;color:#1f2329;overflow:hidden}
-.window{position:absolute;left:32px;top:24px;width:896px;height:516px;background:#fff;border-radius:14px;box-shadow:0 1px 0 rgba(20,22,27,.04),0 18px 44px rgba(20,22,27,.16);overflow:hidden;display:flex;flex-direction:column}
-.bar{height:38px;flex:none;display:flex;align-items:center;gap:8px;padding:0 14px;background:#f6f7f9;border-bottom:1px solid #e6e8ec}
-.dot{width:11px;height:11px;border-radius:50%}
-.url{margin:0 auto;height:24px;padding:0 14px;border-radius:8px;background:#fff;border:1px solid #e3e5ea;color:#6b7280;font-size:12px;display:flex;align-items:center;gap:6px}
-.app{flex:1;display:flex;min-height:0}
-aside{width:206px;flex:none;background:#fafafb;border-right:1px solid #eceef2;padding:14px 10px;display:flex;flex-direction:column;gap:2px}
-.brand{display:flex;align-items:center;gap:8px;font-weight:650;font-size:14px;padding:2px 8px 12px}
-.brand i{width:20px;height:20px;border-radius:6px;background:#111827;display:inline-block}
+html,body{margin:0;height:100%}
+body{font:14px/1.45 -apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans","Apple SD Gothic Neo",sans-serif;color:#1f2329;background:#fff;overflow:hidden}
 button{font:inherit;color:inherit}
-aside button.nav{all:unset;display:flex;align-items:center;gap:9px;height:30px;padding:0 9px;border-radius:7px;cursor:pointer;white-space:nowrap}
+.app{display:flex;height:100vh}
+aside{width:224px;flex:none;background:#fafafb;border-right:1px solid #eceef2;padding:16px 12px;display:flex;flex-direction:column;gap:2px}
+.brand{display:flex;align-items:center;gap:9px;font-weight:650;font-size:15px;padding:2px 9px 14px}
+.brand i{width:22px;height:22px;border-radius:7px;background:#111827;display:inline-block}
+aside button.nav{all:unset;display:flex;align-items:center;gap:10px;height:32px;padding:0 10px;border-radius:8px;cursor:pointer;white-space:nowrap}
 aside button.nav svg{flex:none;color:#6b7280}
-aside button.new{background:#111827;color:#fff;justify-content:center;height:32px;margin-bottom:8px;font-weight:550}
+aside button.new{background:#111827;color:#fff;justify-content:center;height:34px;margin-bottom:10px;font-weight:550}
 aside button.new svg{color:#fff}
-.search{height:30px;border:1px solid #e3e5ea;border-radius:7px;padding:0 9px;margin-bottom:10px;font:inherit;width:100%;background:#fff}
-.label{font-size:11px;color:#9097a3;padding:12px 9px 4px;text-transform:none}
-.recent a{display:block;padding:5px 9px;color:#4b5260;text-decoration:none;font-size:12.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.search{height:32px;border:1px solid #e3e5ea;border-radius:8px;padding:0 10px;margin-bottom:10px;font:inherit;width:100%;background:#fff}
+.label{font-size:12px;color:#9097a3;padding:14px 10px 4px}
+.recent a{display:block;padding:6px 10px;color:#4b5260;text-decoration:none;font-size:13.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 main{flex:1;display:flex;min-width:0}
-.snav{width:170px;flex:none;padding:18px 10px;border-right:1px solid #f0f1f4;display:flex;flex-direction:column;gap:2px}
-.snav h1{font-size:17px;margin:0 9px 12px;font-weight:650}
-.snav button{all:unset;height:30px;padding:0 9px;border-radius:7px;display:flex;align-items:center;cursor:pointer;white-space:nowrap}
+.snav{width:188px;flex:none;padding:20px 12px;border-right:1px solid #f0f1f4;display:flex;flex-direction:column;gap:2px}
+.snav h1{font-size:18px;margin:0 10px 14px;font-weight:650}
+.snav button{all:unset;height:32px;padding:0 10px;border-radius:8px;display:flex;align-items:center;cursor:pointer;white-space:nowrap}
 .snav button[aria-current="page"]{background:#f1f3f6;font-weight:600}
-.panel{flex:1;padding:20px 26px;display:flex;flex-direction:column;gap:14px;min-width:0}
-.panel h2{margin:0;font-size:15px;font-weight:650}
-.row{display:flex;align-items:center;justify-content:space-between;gap:16px;padding-bottom:12px;border-bottom:1px solid #f0f1f4}
+.panel{flex:1;padding:22px 30px;display:flex;flex-direction:column;gap:15px;min-width:0;position:relative}
+.panel section:not([hidden]){display:flex;flex-direction:column;gap:12px}
+.head{display:flex;align-items:center;justify-content:space-between;margin-bottom:4px}
+.panel h2{margin:0;font-size:16px;font-weight:650}
+.more{all:unset;position:absolute;right:26px;top:18px;width:30px;height:30px;border-radius:8px;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;color:#6b7280}
+.more[aria-expanded="true"]{background:#f1f3f6;color:#1f2329}
+[role="menu"]{position:absolute;right:30px;top:58px;width:200px;background:#fff;border:1px solid #e3e5ea;border-radius:10px;box-shadow:0 10px 30px rgba(20,22,27,.14);padding:5px;display:flex;flex-direction:column;z-index:2}
+[role="menu"][hidden]{display:none}
+[role="menuitem"]{all:unset;height:32px;padding:0 10px;border-radius:7px;display:flex;align-items:center;cursor:pointer}
+[role="menuitem"]:hover{background:#f4f5f7}
+.row{display:flex;align-items:center;justify-content:space-between;gap:16px;padding-bottom:13px;border-bottom:1px solid #f0f1f4}
+.row:last-of-type{border-bottom:0}
 .row .t{display:flex;flex-direction:column;gap:2px;min-width:0}
 .row .t b{font-weight:560}
-.row .t small{color:#8a909b;font-size:12px}
-.seg{display:flex;padding:2px;border-radius:8px;background:#f1f3f6;flex:none}
-.seg button{all:unset;padding:4px 11px;border-radius:6px;font-size:12.5px;white-space:nowrap;cursor:pointer}
+.row .t small{color:#8a909b;font-size:12.5px}
+.seg{display:flex;padding:2px;border-radius:9px;background:#f1f3f6;flex:none}
+.seg button{all:unset;padding:5px 12px;border-radius:7px;font-size:13px;white-space:nowrap;cursor:pointer}
 .seg button[aria-checked="true"]{background:#fff;box-shadow:0 1px 2px rgba(20,22,27,.12);font-weight:560}
-.sw{width:34px;height:20px;border-radius:10px;background:#2f56d6;position:relative;flex:none}
-.sw::after{content:"";position:absolute;top:3px;right:3px;width:14px;height:14px;border-radius:50%;background:#fff}
+.sw{width:36px;height:21px;border-radius:11px;background:#2f56d6;position:relative;flex:none}
+.sw::after{content:"";position:absolute;top:3px;right:3px;width:15px;height:15px;border-radius:50%;background:#fff}
 .sw.off{background:#d5d8de}.sw.off::after{right:auto;left:3px}
+.field{display:flex;flex-direction:column;gap:6px}
+.field input{height:34px;border:1px solid #e3e5ea;border-radius:8px;padding:0 10px;font:inherit;width:320px}
+.plan{display:flex;align-items:center;gap:12px;padding:14px 16px;border:1px solid #eceef2;border-radius:12px}
+.plan b{font-size:15px}
+.ghost{height:32px;padding:0 13px;border-radius:8px;border:1px solid #d5d8de;background:#fff;font-weight:550;cursor:pointer}
 .foot{margin-top:auto;display:flex;justify-content:flex-end;gap:8px}
-.foot button{height:32px;padding:0 14px;border-radius:8px;border:1px solid #d5d8de;background:#fff;font-weight:550}
+.foot button{height:34px;padding:0 15px;border-radius:8px;border:1px solid #d5d8de;background:#fff;font-weight:550}
 .foot button.primary{background:#111827;border-color:#111827;color:#fff}
-.langs{position:absolute;left:32px;right:32px;bottom:22px;height:36px;display:flex;align-items:center;justify-content:center;gap:6px}
-.langs span{height:28px;padding:0 12px;border-radius:999px;display:inline-flex;align-items:center;font-size:12.5px;color:#4b5260;background:#fff;border:1px solid #e3e5ea}
-.langs span.on{background:#2f56d6;border-color:#2f56d6;color:#fff;font-weight:600}
-.langs .mark{display:inline-flex;align-items:center;gap:7px;margin-right:8px;font-weight:650;color:#1f2329;font-size:13px}
+section[hidden]{display:none}
 </style>
 </head>
 <body>
-<div class="window">
-  <div class="bar" aria-hidden="true"><span class="dot" style="background:#ff5f57"></span><span class="dot" style="background:#febc2e"></span><span class="dot" style="background:#28c840"></span><span class="url">app.notara.example/settings</span></div>
-  <div class="app">
-    <aside aria-label="Sidebar">
-      <div class="brand"><i></i><span>Notara</span></div>
-      <button class="nav new"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg><span>New note</span></button>
-      <input class="search" type="search" placeholder="Search notes">
-      <button class="nav"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 13h4l2 3h4l2-3h4"/><path d="M5 5h14l1 8v6H4v-6z"/></svg><span>Inbox</span></button>
-      <button class="nav"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7h7l2 2h9v10H3z"/></svg><span>Projects</span></button>
-      <button class="nav"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3"/><path d="M3 19c1-3 3.5-5 6-5s5 2 6 5"/><path d="M16 5a3 3 0 0 1 0 6M18 14c1.5.6 2.6 2.4 3 5"/></svg><span>Shared with me</span></button>
-      <button class="nav"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M9 7V5h6v2M6 7l1 13h10l1-13"/></svg><span>Trash</span></button>
-      <div class="label">Recent</div>
-      <div class="recent"><a href="/note/7c1e">Trip to Lisbon</a><a href="/note/91ad">Q4 roadmap draft</a><a href="/note/b3f0">Reading list</a></div>
-    </aside>
-    <main>
-      <nav class="snav" aria-label="Settings sections">
-        <h1>Settings</h1>
-        <button aria-current="page">General</button><button>Account</button><button>Notifications</button><button>Privacy</button><button>Billing</button>
-      </nav>
-      <section class="panel">
-        <h2>Appearance</h2>
+<div class="app">
+  <aside aria-label="Sidebar">
+    <div class="brand"><i></i><span>Notara</span></div>
+    <button class="nav new"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg><span>New note</span></button>
+    <input class="search" type="search" placeholder="Search notes">
+    <button class="nav"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 13h4l2 3h4l2-3h4"/><path d="M5 5h14l1 8v6H4v-6z"/></svg><span>Inbox</span></button>
+    <button class="nav"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 7h7l2 2h9v10H3z"/></svg><span>Projects</span></button>
+    <button class="nav"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3"/><path d="M3 19c1-3 3.5-5 6-5s5 2 6 5"/><path d="M16 5a3 3 0 0 1 0 6M18 14c1.5.6 2.6 2.4 3 5"/></svg><span>Shared with me</span></button>
+    <button class="nav"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M9 7V5h6v2M6 7l1 13h10l1-13"/></svg><span>Trash</span></button>
+    <div class="label">Recent</div>
+    <section class="recent" data-testid="recent-notes"><a href="/note/7c1e">Trip to Lisbon</a><a href="/note/91ad">Q4 roadmap draft</a><a href="/note/b3f0">Reading list</a></section>
+  </aside>
+  <main>
+    <nav class="snav" aria-label="Settings sections">
+      <h1>Settings</h1>
+      <button data-s="general" aria-current="page">General</button><button data-s="account">Account</button><button data-s="notifications">Notifications</button><button data-s="privacy">Privacy</button><button data-s="billing">Billing</button>
+    </nav>
+    <div class="panel">
+      <button class="more" aria-haspopup="menu" aria-expanded="false" aria-label="More options"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><circle cx="5" cy="12" r="1.8"/><circle cx="12" cy="12" r="1.8"/><circle cx="19" cy="12" r="1.8"/></svg></button>
+      <div role="menu" hidden><button role="menuitem">Export settings</button><button role="menuitem">Reset to defaults</button></div>
+      <section data-s="general">
+        <div class="head"><h2>Appearance</h2></div>
         <div class="row" role="radiogroup" aria-labelledby="l-theme"><div class="t"><b id="l-theme">Theme</b><small>Choose how Notara looks to you.</small></div><div class="seg"><button role="radio" aria-checked="true">Light</button><button role="radio" aria-checked="false">Dark</button><button role="radio" aria-checked="false">System</button></div></div>
         <div class="row" role="radiogroup" aria-labelledby="l-size"><div class="t"><b id="l-size">Text size</b><small>Applies to notes and comments.</small></div><div class="seg"><button role="radio" aria-checked="false">Small</button><button role="radio" aria-checked="true">Medium</button><button role="radio" aria-checked="false">Large</button></div></div>
         <div class="row" role="radiogroup" aria-labelledby="l-width"><div class="t"><b id="l-width">Page width</b></div><div class="seg"><button role="radio" aria-checked="false">Narrow</button><button role="radio" aria-checked="true">Medium</button><button role="radio" aria-checked="false">Wide</button></div></div>
-        <div class="row"><div class="t"><b>Show word count</b><small>Display the count in the status bar.</small></div><span class="sw" role="switch" aria-checked="true"></span></div>
-        <div class="row" style="border:0"><div class="t"><b>Spell check</b><small>Check spelling as you type.</small></div><span class="sw off" role="switch" aria-checked="false"></span></div>
-        <div class="foot"><button>Cancel</button><button class="primary">Save changes</button></div>
+        <div class="row"><div class="t"><b>Show word count</b><small>Display the count in the status bar.</small></div><span class="sw" role="switch" aria-checked="true" aria-label="Show word count"></span></div>
+        <div class="row"><div class="t"><b>Spell check</b><small>Check spelling as you type.</small></div><span class="sw off" role="switch" aria-checked="false" aria-label="Spell check"></span></div>
       </section>
-    </main>
-  </div>
+      <section data-s="account" hidden>
+        <div class="head"><h2>Profile</h2></div>
+        <label class="field"><b>Display name</b><input value="Mira Chen"></label>
+        <div class="row"><div class="t"><b>Profile photo</b><small>Shown next to your notes and comments.</small></div><button class="ghost">Change photo</button></div>
+      </section>
+      <section data-s="notifications" hidden>
+        <div class="head"><h2>Notifications</h2></div>
+        <div class="row"><div class="t"><b>Email digests</b><small>A summary of activity, once a week.</small></div><span class="sw" role="switch" aria-checked="true" aria-label="Email digests"></span></div>
+        <div class="row"><div class="t"><b>Mentions</b><small>When someone mentions you in a note.</small></div><span class="sw" role="switch" aria-checked="true" aria-label="Mentions"></span></div>
+        <div class="row"><div class="t"><b>Reminders</b><small>Due dates and scheduled notes.</small></div><span class="sw off" role="switch" aria-checked="false" aria-label="Reminders"></span></div>
+      </section>
+      <section data-s="privacy" hidden>
+        <div class="head"><h2>Privacy</h2></div>
+        <div class="row"><div class="t"><b>Share usage data</b><small>Help improve Notara with anonymous statistics.</small></div><span class="sw off" role="switch" aria-checked="false" aria-label="Share usage data"></span></div>
+        <div class="row"><div class="t"><b>Show online status</b><small>Let collaborators see when you are active.</small></div><span class="sw" role="switch" aria-checked="true" aria-label="Show online status"></span></div>
+      </section>
+      <section data-s="billing" hidden>
+        <div class="head"><h2>Billing</h2></div>
+        <div class="plan"><div class="t" style="flex:1;display:flex;flex-direction:column;gap:2px"><small style="color:#8a909b">Current plan</small><b>Free</b></div><button class="ghost">Compare plans</button></div>
+      </section>
+      <div class="foot"><button>Cancel</button><button class="primary">Save changes</button></div>
+    </div>
+  </main>
 </div>
-<div class="langs" aria-hidden="true"><span class="mark"><svg width="18" height="18" viewBox="0 0 128 128"><rect x="6" y="6" width="84" height="84" rx="22" fill="#2F56D6"/><rect x="38" y="38" width="84" height="84" rx="22" fill="#F2B33D"/><path d="M60 38H90V68A22 22 0 0 1 68 90H38V60A22 22 0 0 1 60 38Z" fill="#C79F5F"/></svg>Translucid</span><span data-l="en">English</span><span data-l="zh-CN">简体中文</span><span data-l="ja">日本語</span><span data-l="es">Español</span><span data-l="de">Deutsch</span><span data-l="fr">Français</span><span data-l="ko">한국어</span></div>
+<script>
+// Settings sections: a same-document switch, like a client-side route.
+for (const b of document.querySelectorAll('.snav button')) {
+  b.addEventListener('click', () => {
+    for (const x of document.querySelectorAll('.snav button')) x.toggleAttribute('aria-current', x === b);
+    for (const x of document.querySelectorAll('.snav button[aria-current]')) x.setAttribute('aria-current', 'page');
+    for (const s of document.querySelectorAll('.panel section')) s.hidden = s.dataset.s !== b.dataset.s;
+    closeMenu();
+  });
+}
+// The "More options" menu: opens on click, closes on Escape, a second click or a click outside.
+const trigger = document.querySelector('.more');
+const menu = document.querySelector('[role="menu"]');
+function closeMenu() { menu.hidden = true; trigger.setAttribute('aria-expanded', 'false'); }
+trigger.addEventListener('click', (e) => {
+  e.stopPropagation();
+  const open = menu.hidden;
+  menu.hidden = !open;
+  trigger.setAttribute('aria-expanded', String(open));
+  if (open) menu.querySelector('[role="menuitem"]').focus();
+});
+document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeMenu(); });
+document.addEventListener('click', (e) => { if (!menu.contains(e.target)) closeMenu(); });
+</script>
 </body>
 </html>
