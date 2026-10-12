@@ -1,7 +1,7 @@
 {
   "name": "translucid",
   "private": true,
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "LLM web page translation to Chinese, plus local per-site UI language packs in any language (Chrome/Edge MV3).",
   "license": "MIT",
   "type": "module",

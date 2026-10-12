@@ -1,4 +1,5 @@
 import { Composition, staticFile } from 'remotion';
+import { Promo, type PromoProps } from './Promo';
 import { Scene, type SceneProps } from './Scene';
 import { build, FPS, H, W, type SceneData } from './timeline';
 
@@ -30,6 +31,9 @@ export function Root() {
           }}
         />
       ))}
+      {/* Chrome Web Store promo tiles (stills; see store.mjs). */}
+      <Composition id="promo-small" component={Promo} width={440} height={280} fps={FPS} durationInFrames={1} defaultProps={{ variant: 'small' } satisfies PromoProps} />
+      <Composition id="promo-marquee" component={Promo} width={1400} height={560} fps={FPS} durationInFrames={1} defaultProps={{ variant: 'marquee' } satisfies PromoProps} />
     </>
   );
 }
