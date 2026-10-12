@@ -34,6 +34,8 @@ export interface ControllerOptions {
   exclude?: string;
   /** Send an article excerpt for topic/term extraction: 'auto' only on long pages. */
   preprocess: 'auto' | 'on' | 'off';
+  /** False: this document must not be translated now (a frame holding sign-in or payment fields). */
+  canStart?: () => boolean;
 }
 
 type Status = 'idle' | 'queued' | 'loading' | 'done' | 'error';
@@ -136,7 +138,7 @@ export class Controller {
   // ---------- public API ----------
 
   start(): void {
-    if (this.enabled) return;
+    if (this.enabled || this.opts.canStart?.() === false) return;
     this.enabled = true;
     this.startedAt = performance.now();
     this.firstPaintMs = null;
