@@ -1,13 +1,13 @@
 # Translucid · 透译
 
-为没有你母语界面的网页应用生成**任意语言**的本地界面语言包；也能用大模型把网页翻译成**简体中文**（双语对照 / 只看译文）。Chrome / Edge 扩展（Manifest V3），自带 API Key，无服务器、无遥测。
+简体中文 · [English](README.en.md)
 
-An MV3 browser extension (Chrome / Edge) that builds local **site language packs**, showing a web app's interface in **any** language, and translates web pages into **Simplified Chinese** with an LLM. Bring your own API key; no server, no telemetry. [English summary below.](#english)
+为没有你母语界面的网页应用生成**任意语言**的本地界面语言包；也能用大模型把网页翻译成**简体中文**（双语对照 / 只看译文）。Chrome / Edge 扩展（Manifest V3），自带 API Key，无服务器、无遥测。
 
 <p align="center">
   <img src="docs/images/languages.gif" width="880" alt="同一个网页应用的界面在英语、简体中文、日语、西班牙语、德语、法语和韩语之间切换">
 </p>
-<p align="center"><sub>真实的扩展把语言包依次应用到一个虚构的笔记应用上，界面可以换成任意语言；侧栏「最近」里的笔记标题属于用户内容，始终保持原文。本页动图都由真实扩展在虚构页面上录制，译文为手写示例（<a href="docs/media">制作方法</a>）。</sub></p>
+<p align="center"><sub>同一个网页应用，界面在七种语言之间切换；侧栏「最近」里的笔记标题是你自己的内容，始终保持原文。</sub></p>
 
 扩展分三块，从左侧导航或扩展图标进入：
 
@@ -26,7 +26,7 @@ An MV3 browser extension (Chrome / Edge) that builds local **site language packs
 <p align="center">
   <img src="docs/images/scan.gif" width="880" alt="点扩展图标，选择一键本地化此站点；扫描自动打开设置的各个分区和菜单，结束后页面恢复原状">
 </p>
-<p align="center"><sub>一键扫描：自动打开设置分区和菜单收集界面文字，不改任何设置，结束后恢复原状（扫描过程为 2 倍速；省略了第一次扫描前的同意说明）。</sub></p>
+<p align="center"><sub>一键扫描：自动打开设置分区和菜单，收集界面文字；不改任何设置，结束后页面恢复原状。</sub></p>
 
 1. 打开要本地化的网站。想连设置一起翻译，就先打开它的设置窗口。
 2. 点扩展图标，在「本地化」标签选择目标语言，点「一键本地化此站点」。第一次扫描会先说明扫描会做什么，请你同意。扫描只打开导航和菜单，不改任何设置，结束后恢复原状；按 Esc 可随时停止。
@@ -52,8 +52,9 @@ An MV3 browser extension (Chrome / Edge) that builds local **site language packs
 <p align="center">
   <img src="docs/images/picker.gif" width="880" alt="圈选面板：悬停高亮，按上方向键扩大到整个侧栏并圈选；切到排除内容，把最近笔记列表标为排除；要圈的地方被面板挡住时面板让开">
 </p>
+<p align="center"><sub>调整范围：悬停高亮，↑ / ↓ 扩大或缩小，点一下记为界面区域；你自己的内容用「排除内容」标出。</sub></p>
 
-能识别的界面结构包括：设置对话框的分区导航、带标签的选项组、「标题 + 说明 | 控件」式的设置行、原生下拉框、弹出菜单和下拉列表（含被渲染到页面别处的弹层）、侧栏导航和标签页。测试页面用真实的 Base UI 与 Radix 组件仿照常见生产力工具的结构。
+能识别的界面结构包括：设置对话框的分区导航、带标签的选项组、「标题 + 说明 | 控件」式的设置行、原生下拉框、弹出菜单和下拉列表（含被渲染到页面别处的弹层）、侧栏导航和标签页。
 
 候选文字只存在本机，30 天过期；导出前自动清洗个人信息，并让你预览。详见 [PRIVACY.md](PRIVACY.md) 和 [docs/DESIGN.md](docs/DESIGN.md)。
 
@@ -62,6 +63,7 @@ An MV3 browser extension (Chrome / Edge) that builds local **site language packs
 <p align="center">
   <img src="docs/images/immersive.gif" width="880" alt="在博客文章上点翻译此页，译文逐段出现在原文下方，再一键切换为只看译文">
 </p>
+<p align="center"><sub>网页翻译：译文逐段出现在原文下方，一键切换为只看译文。</sub></p>
 
 - **网页翻译**：双语对照或只看译文；优先翻译视口附近的内容，流式逐段显示；保留链接、加粗、代码等行内格式；本地缓存，刷新页面不重复请求。
 - **场景专家**：通用、科技、新闻、学术、严谨（法律 / 医疗 / 金融）、社区、小说七套规则，按域名自动匹配，可编辑、导入导出。
@@ -78,14 +80,10 @@ An MV3 browser extension (Chrome / Edge) that builds local **site language packs
 
 ## 安装
 
-```bash
-pnpm install
-pnpm build          # 产物在 dist/chrome-mv3
-```
-
-1. 打开 `chrome://extensions`（Edge 为 `edge://extensions`），开启「开发者模式」，点「加载已解压的扩展程序」，选择 `dist/chrome-mv3`。
-2. 点扩展图标右上角的齿轮打开「配置」，在「服务商与路由」里展开一个服务商，填入 API Key，点「测试连接」，然后保存。
-3. 站点本地化见上文；阅读网页时按 `Alt+A` 翻译。
+1. 从 [Releases](https://github.com/PIDEAN/translucid/releases/latest) 下载 `translucid-<版本>-chrome.zip` 并解压；或者从源码构建（`pnpm install && pnpm build`，产物在 `dist/chrome-mv3`）。
+2. 打开 `chrome://extensions`（Edge 为 `edge://extensions`），开启「开发者模式」，点「加载已解压的扩展程序」，选择解压后的文件夹（或 `dist/chrome-mv3`）。
+3. 点扩展图标右上角的齿轮打开「配置」，在「服务商与路由」里展开一个服务商，填入 API Key，点「测试连接」，然后保存。
+4. 站点本地化见上文；阅读网页时按 `Alt+A` 翻译。
 
 ## 隐私
 
@@ -129,44 +127,13 @@ src/pack/           语言包格式、界面结构与语境、界面 / 内容分
 src/prompt/         协议层、场景专家、术语表、语言包提示词
 e2e/                Playwright 测试、fixture 页面、mock LLM
 tests/              单元测试
-docs/               设计说明、致谢、截图
+docs/               设计说明、致谢、README 截图与动图（media）、商店素材（store）
 ```
 
-欢迎提交 issue 和 PR。设计取舍见 [docs/DESIGN.md](docs/DESIGN.md)，借鉴的思路见 [docs/ACKNOWLEDGEMENTS.md](docs/ACKNOWLEDGEMENTS.md)。截图和动图由测试数据生成（`docs/media`），不含真实网站内容。
+欢迎提交 issue 和 PR。设计取舍见 [docs/DESIGN.md](docs/DESIGN.md)，借鉴的思路见 [docs/ACKNOWLEDGEMENTS.md](docs/ACKNOWLEDGEMENTS.md)。
+
+README 里的截图和动图是在虚构的演示页面上录制的，演示中的译文是示例文本，不含任何真实网站的内容；制作方法见 [docs/media](docs/media)。
 
 ## 许可
 
 [MIT](LICENSE)。打包进扩展的第三方依赖及其许可证见 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)。
-
----
-
-## English
-
-The animations on this page are the real extension recorded on made-up pages, with hand-written translations ([how they are made](docs/media)). The one at the top applies language packs to a made-up notes app: the same interface in seven languages, while the user's own note titles stay as written. The others show the one-click scan, the review with the exact request preview (the same "Medium" becomes 中 for text size and 适中 for page width), region picking, and page translation side by side or in place.
-
-**Translucid** has three parts, reachable from the side navigation or the toolbar popup:
-
-- **Workbench (site localization, the headline feature)** localizes a web app's interface into **any** language.
-  - **Scan.** One click explores the app's navigation sections, menus and dropdowns. It never changes settings and restores the page afterwards. It collects interface strings and leaves user content out.
-  - **Group.** Strings are grouped by screen › section › question, so the same word can be translated correctly for each question it answers.
-  - **Confirm.** You review what was found, see the exact request, and confirm once.
-  - **Reuse.** The result is stored locally and applied in place on every later visit, without further model calls. New interface strings met during everyday use are queued for review.
-  - **Edit and share.** Packs can be edited per context, exported (with automatic privacy scrubbing and a preview) and imported.
-- **Immersive translation** translates web pages into Simplified Chinese with an LLM of your choice.
-  - Side by side or in place.
-  - Domain-specific prompt rules, glossaries and caching.
-- **Config** covers the providers, routing, usage and privacy.
-  - Providers: DeepSeek, Zhipu GLM, Z.ai, Gemini, Anthropic Claude, OpenCode, OpenRouter, NVIDIA NIM, or any OpenAI-compatible endpoint.
-  - Robust rate limiting with provider fallback.
-
-Other notes:
-
-- **Install:** run `pnpm install && pnpm build`, then load `dist/chrome-mv3` as an unpacked extension. Open Config from the gear in the popup and add an API key under 服务商与路由.
-- **Region picking** gives you fine control.
-  - Open a page menu first, then press `Alt+Shift+P`. Clicking the toolbar icon would take focus from the page and close the menu.
-  - `Esc` pauses and resumes picking.
-  - The picker panel moves out of the way when you rest on something it covers, and stays put when you head for its buttons.
-- **Privacy:** text goes only to the providers you configure. Keys stay in local browser storage (unencrypted). There is no telemetry. See [PRIVACY.md](PRIVACY.md).
-- **Unofficial endpoints:** the optional free Google / Microsoft machine translation uses **unofficial** endpoints and is off by default.
-- **Trademarks:** provider logos and names belong to their owners and only identify supported services.
-- **Language and license:** the UI is in Simplified Chinese. License: [MIT](LICENSE).
