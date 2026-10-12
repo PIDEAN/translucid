@@ -98,6 +98,8 @@ const SVG_NS = 'http://www.w3.org/2000/svg';
 
 const POINTER_EVENTS = ['click', 'mousedown', 'mouseup', 'pointerdown', 'pointerup', 'dblclick', 'contextmenu', 'touchstart', 'touchend'] as const;
 const KEY_EVENTS = ['keydown', 'keyup', 'keypress'] as const;
+/** How long the highlight must rest before the panel moves off it. */
+const CLEAR_DELAY_MS = 300;
 
 export class RegionPicker {
   private actions = new WeakMap<Element, (e: Event) => void>();
@@ -117,6 +119,9 @@ export class RegionPicker {
   private countTimer: ReturnType<typeof setInterval> | undefined;
   /** Panel corner: it moves away from the pointer so it never covers what you want to click. */
   private corner: 'tr' | 'bl' | 'br' | 'tl' = 'tr';
+  private clearTimer: ReturnType<typeof setTimeout> | undefined;
+  /** The pointer is over the panel: it is there for the buttons, so the panel must not move. */
+  private onPanel = false;
 
   constructor(
     private doc: Document,
@@ -161,6 +166,7 @@ export class RegionPicker {
       view.removeEventListener('scroll', this.repaint, true);
     }
     clearInterval(this.countTimer);
+    clearTimeout(this.clearTimer);
     this.host.remove();
   }
 
@@ -208,7 +214,10 @@ export class RegionPicker {
   }
 
   private onPointer = (e: Event) => {
+    if (e.type === 'mousemove') this.onPanel = this.ours(e);
     if (this.ours(e)) {
+      // Reaching the panel cancels a pending move: the pointer is there for its buttons.
+      if (e.type === 'mousemove') clearTimeout(this.clearTimer);
       // Run the action directly: dispatching a replay would expose it to page capture listeners.
       if (!e.isTrusted || e.type === 'mousemove') return;
       e.stopImmediatePropagation();
@@ -313,22 +322,42 @@ export class RegionPicker {
 
   private setMode(m: PickMode): void {
     this.mode = m;
-    if (m === 'paused') this.hl.style.display = 'none';
+    if (m === 'paused') {
+      this.hl.style.display = 'none';
+      clearTimeout(this.clearTimer);
+    }
     this.render();
+  }
+
+  /**
+   * Move the panel off the highlighted element, but only once the pointer rests there: on its way to the
+   * panel's buttons it crosses rows that reach under the panel. Never while the pointer is on the panel
+   * or picking is paused; both are checked again when the timer fires.
+   */
+  private scheduleClear(): void {
+    clearTimeout(this.clearTimer);
+    if (this.onPanel || this.mode === 'paused') return;
+    this.clearTimer = setTimeout(() => {
+      const found = this.target && !this.onPanel && this.mode !== 'paused' ? this.selectable(this.lifted(this.target)) : undefined;
+      if (!found) return;
+      const r = found.el.getBoundingClientRect();
+      // A big region (a whole sidebar) only needs the pointer kept clear; a small one should be fully visible.
+      const view = this.doc.defaultView!;
+      const huge = r.width * r.height > view.innerWidth * view.innerHeight * 0.5;
+      this.keepClear(huge ? new DOMRect(this.pointer.x, this.pointer.y, 1, 1) : r);
+    }, CLEAR_DELAY_MS);
   }
 
   private paintHighlight(): void {
     const found = this.target && this.mode !== 'paused' ? this.selectable(this.lifted(this.target)) : undefined;
     if (!found) {
       this.hl.style.display = 'none';
+      clearTimeout(this.clearTimer);
       return;
     }
     const r = found.el.getBoundingClientRect();
     Object.assign(this.hl.style, { display: 'block', left: `${r.left}px`, top: `${r.top}px`, width: `${r.width}px`, height: `${r.height}px` });
-    // A big region (a whole sidebar) only needs the pointer kept clear; a small one should be fully visible.
-    const view = this.doc.defaultView!;
-    const huge = r.width * r.height > view.innerWidth * view.innerHeight * 0.5;
-    this.keepClear(huge ? new DOMRect(this.pointer.x, this.pointer.y, 1, 1) : r);
+    this.scheduleClear();
     this.hl.className = this.mode === 'exclude' ? 'hl ex' : 'hl';
     this.hl.replaceChildren(Object.assign(this.doc.createElement('span'), {
       className: 'tag',

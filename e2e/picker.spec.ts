@@ -63,4 +63,25 @@ test('picking inside an open page menu: the menu stays open, the panel keeps out
   // Pointing at the panel itself keeps it where it is (its buttons stay clickable).
   await panel.hover();
   await expect(panel).toHaveClass(new RegExp(`at-${(await panel.getAttribute('class'))!.split('at-')[1]}`));
+
+  // Moving across the page to a panel button, over a row that reaches under the panel, does not chase it away.
+  const button = (await picker.getByRole('button', { name: '排除内容' }).boundingBox())!;
+  const aim = { x: button.x + button.width / 2, y: button.y + button.height / 2 };
+  await page.evaluate((y) => {
+    const row = document.createElement('div');
+    row.id = 'wide-row';
+    row.textContent = 'A settings row as wide as the page';
+    Object.assign(row.style, { position: 'fixed', left: '0', top: `${y - 30}px`, width: '100vw', height: '60px', zIndex: '10', background: '#f4f4f4' });
+    document.body.appendChild(row);
+  }, aim.y);
+  const from = { x: aim.x > 640 ? 60 : 1220, y: aim.y + (aim.y > 400 ? -150 : 150) };
+  await page.mouse.move(from.x, from.y);
+  await page.waitForTimeout(400);
+  const corner = (await panel.getAttribute('class'))!.match(/at-\w+/)![0];
+  await page.mouse.move(aim.x, aim.y, { steps: 16 });
+  await page.mouse.down();
+  await page.mouse.up();
+  await expect(picker.getByRole('button', { name: '排除内容' })).toHaveClass(/on/);
+  await page.waitForTimeout(400);
+  await expect(panel).toHaveClass(new RegExp(corner));
 });

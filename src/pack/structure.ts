@@ -195,15 +195,41 @@ function navSection(el: Element, surface: SurfaceInfo): string | undefined {
   return undefined;
 }
 
-/** Nearest preceding heading within the surface (bounded walk); item titles are not section names. */
+const HEADING = 'h1,h2,h3,[role="heading"]';
+/** Headings looked for inside a preceding sibling (the first match wins). */
+const HEADING_IN = 'h1,h2,h3,[role="heading"]:last-of-type';
+/** Hidden by markup: tab panels and settings sections that stay in the DOM while another one shows. */
+const hiddenByMarkup = (e: Element) => e.hasAttribute('hidden') || e.hasAttribute('inert') || e.getAttribute('aria-hidden') === 'true' || (e as HTMLElement).style?.display === 'none';
+
+/**
+ * Nearest preceding heading within the surface (bounded walk); item titles are not section names.
+ * A heading starts its own section, and headings of hidden siblings (other tab panels) do not count.
+ */
 function headingSection(el: Element, surface: SurfaceInfo): string | undefined {
+  if (el.matches(HEADING) && !itemTitle(el)) {
+    const own = clean(originalText(el));
+    if (own) return own;
+  }
   let steps = 0;
   for (let a: Element | null = el; a && a !== surface.el && steps < 60; a = a.parentElement) {
     for (let s = a.previousElementSibling; s && steps < 60; s = s.previousElementSibling, steps++) {
-      const h = s.matches('h1,h2,h3,[role="heading"]') ? s : s.querySelector('h1,h2,h3,[role="heading"]:last-of-type');
+      if (hiddenByMarkup(s)) continue;
+      const h = s.matches(HEADING) ? s : shownHeadingIn(s);
       if (h && !itemTitle(h)) return clean(originalText(h));
     }
   }
+  return undefined;
+}
+
+/** First heading inside a preceding sibling that is not in a hidden part of it (a closed panel or menu). */
+function shownHeadingIn(box: Element): Element | undefined {
+  const inHidden = (h: Element) => {
+    for (let e: Element | null = h; e && e !== box; e = e.parentElement) if (hiddenByMarkup(e)) return true;
+    return false;
+  };
+  const first = box.querySelector(HEADING_IN);
+  if (!first || !inHidden(first)) return first ?? undefined;
+  for (const h of box.querySelectorAll(HEADING_IN)) if (!inHidden(h)) return h;
   return undefined;
 }
 
