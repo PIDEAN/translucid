@@ -17,7 +17,8 @@
     "try": "tsx scripts/try.ts",
     "build:debug": "wxt build --mode debug",
     "icons": "tsx scripts/icons.ts",
-    "e2e": "wxt build && playwright test"
+    "e2e": "wxt build && playwright test",
+    "readme:media": "wxt build && playwright test -c docs/media && python3 docs/media/compose_hero.py"
   },
   "devDependencies": {
     "@base-ui/react": "1.8.0",

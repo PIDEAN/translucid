@@ -4,7 +4,10 @@
 
 An MV3 browser extension (Chrome / Edge) that builds local **site language packs**, showing a web app's interface in **any** language, and translates web pages into **Simplified Chinese** with an LLM. Bring your own API key; no server, no telemetry. [English summary below.](#english)
 
-![工作台：按界面结构审核找到的文字，确认一次即翻译](docs/images/workbench-review.png)
+<p align="center">
+  <img src="docs/images/hero.gif" width="880" alt="同一个网页应用的界面在英语、简体中文、日语、西班牙语、德语、法语和韩语之间切换">
+</p>
+<p align="center"><sub>真实的扩展把手写的语言包依次应用到一个虚构的笔记应用上，界面可以换成任意语言。侧栏「最近」里的笔记标题属于用户内容，始终保持原文。</sub></p>
 
 扩展分三块，从左侧导航或扩展图标进入：
 
@@ -20,7 +23,16 @@ An MV3 browser extension (Chrome / Edge) that builds local **site language packs
 
 为常用的网页应用（例如英文界面的 AI 助手、开发工具）一键生成完整的界面译文。扫描会自动打开菜单、设置分区和下拉列表，找出界面文字。翻译时按「界面 › 分区 › 问题 › 选项」的结构成组发给模型，所以同一个词在不同问题下能有不同的正确译法（例如文字大小里的 Medium 和栏宽里的 Medium）。结果保存在本机，之后打开网站直接显示目标语言界面，不再请求模型。
 
-<p align="center"><img src="docs/images/popup.png" width="372" alt="弹出菜单：一键本地化此站点"></p>
+<table>
+  <tr>
+    <td width="300" valign="top"><img src="docs/images/popup.png" width="300" alt="弹出菜单：一键本地化此站点"></td>
+    <td valign="top"><img src="docs/images/workbench-review.png" alt="工作台：按界面结构审核找到的文字，确认一次即翻译"></td>
+  </tr>
+  <tr>
+    <td align="center"><sub>弹出菜单：一键本地化此站点</sub></td>
+    <td align="center"><sub>工作台：按「界面 › 分区 › 问题」审核找到的文字，确认一次即翻译</sub></td>
+  </tr>
+</table>
 
 1. 打开要本地化的网站。想连设置一起翻译，就先打开它的设置窗口。
 2. 点扩展图标，在「本地化」标签选择目标语言，点「一键本地化此站点」。第一次扫描会先说明扫描会做什么，请你同意。扫描只打开导航和菜单，不改任何设置，结束后恢复原状；按 Esc 可随时停止。
@@ -95,6 +107,7 @@ pnpm e2e            # 端到端测试（Playwright + 本地 fixture 页面 + moc
 pnpm harness        # http://localhost:5200：在本地页面上调试内容脚本（假后端）
 pnpm build:debug    # 调试版：含页面调试接口和每次请求的指标日志
 pnpm icons          # 从 src/ui/brand.ts 重新生成扩展图标
+pnpm readme:media   # 用测试数据重新生成 README 的截图和动图（需要 Pillow 和 ffmpeg，见 docs/media）
 XT_API_KEY=… pnpm try --provider deepseek   # 用真实 API 试跑各场景的提示词
 ```
 
@@ -114,7 +127,7 @@ tests/              单元测试
 docs/               设计说明、致谢、截图
 ```
 
-欢迎提交 issue 和 PR。设计取舍见 [docs/DESIGN.md](docs/DESIGN.md)，借鉴的思路见 [docs/ACKNOWLEDGEMENTS.md](docs/ACKNOWLEDGEMENTS.md)。截图由测试数据生成，不含真实网站内容。
+欢迎提交 issue 和 PR。设计取舍见 [docs/DESIGN.md](docs/DESIGN.md)，借鉴的思路见 [docs/ACKNOWLEDGEMENTS.md](docs/ACKNOWLEDGEMENTS.md)。截图和动图由测试数据生成（`docs/media`），不含真实网站内容。
 
 ## 许可
 
@@ -123,6 +136,8 @@ docs/               设计说明、致谢、截图
 ---
 
 ## English
+
+The animation at the top is the real extension applying hand-written language packs to a made-up notes app: the same interface in seven languages, while the user's own note titles stay as written.
 
 **Translucid** has three parts, reachable from the side navigation or the toolbar popup:
 
