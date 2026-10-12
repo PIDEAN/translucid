@@ -6,7 +6,8 @@
   "scripts": {
     "studio": "remotion studio src/index.ts",
     "render": "node render.mjs",
-    "compile": "tsc --noEmit"
+    "compile": "tsc --noEmit",
+    "store": "node store.mjs"
   },
   "dependencies": {
     "@remotion/cli": "4.0.529",

@@ -15,6 +15,8 @@ Everything in `docs/images` comes from test data: the real, built extension work
 
 `screenshots.media.ts` takes the one still screenshot (`config.png`).
 
+Chrome Web Store images (`docs/store/`: five 1280×800 screenshots taken from the same compositions, the promo tiles from `remotion/src/Promo.tsx`, and a padded store icon) come from `pnpm --dir docs/media/remotion store`, run after the captures. The listing text is in `docs/store/listing.md`.
+
 ## Regenerate
 
 ```bash
